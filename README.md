@@ -17,11 +17,16 @@ I am very pleased of the PASM results I was able to
 accomplish when I started and finished the project.
 
 # Usage
----------------
+--------------
+Constructor
+
+Creates database reference from parameter
+new H2No(string)
+--------------
 Create key/value Pair
 
 create(array)
--------------
+--------------
 Read key from H2No database
 
 read(string)
@@ -44,4 +49,4 @@ load_db(string)
 -------------
 load serialized file into H2No
 
-set_h2no(string)
+(AKA set_h2no(string))
