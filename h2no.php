@@ -1,39 +1,36 @@
-<?php
-	namespace pasm;
+<?php declare (strict_types = 1);
+	namespace src;
 
 	require_once 'pasm.php';
 
-
 	class H2No {
 
-		public $h2no;
-		public $result;
-		public $db;
+		public static $h2no;
+		public static $result;
+		public static $db;
 
 		function __construct(string $file)
-		{
+		{	
 			$sha256 = "";
-			$this->result = [];
-
-			if (file_exists($file))
-			{
-				$sha256 = hash_file('sha256','pasm.php');
-				$this->h2no = new PASM();
-			}
+			H2No::$result = [];
 			try
 			{
-				$this->h2no::restore($file);
-				$this->db = $this->h2no::$stack;
+				if (file_exists($file))
+				{
+					H2No::$h2no = new PASM();
+				}
+				H2No::$h2no::restore($file);
+				H2No::$db = H2No::$h2no::$stack;
 			}
 			catch (e){exit(0);}
-			$this->h2no::verified();
-			if ($this->h2no::$checksum == "68abaa9117c6f055987c4240f4950e41aec32efa212c3bad3c9384f834936feb")
+			H2No::$h2no::verified();
+			if (H2No::$h2no::$checksum == "a2b1ddd23dcda40accd3ae4a1faa6b22d7570c299f1bb4afeeeaf8860e9a5aba")
 			{
-				echo 'PASM Verified as Version ' . $this->h2no::$version;
+				echo 'PASM Verified as Version ' . H2No::$h2no::$version;
 			}
 			else
 			{
-				echo 'PASM version was unaquirable' . $this->h2no::$version;
+				echo 'PASM version was unaquirable' . H2No::$h2no::$version;
 				exit();
 			}
 		}
@@ -51,14 +48,14 @@
 		  * @param db H2No Database Name (default: h2no)
 		  * @return void 
 		 */
-		public function set_h2no(string $db)
+		public static function set_h2no(string $db)
 		{
 			if (file_exists($db))
-				$this->h2no::restore($db);
+				H2No::$h2no::restore($db);
 			else
 				echo 'Error: Failed Callback - Please check data';
-			$this->db = $this->h2no::$stack;
-			return $this;
+			H2No::$db = H2No::$h2no::$stack;
+			return H2No::$db;
 		}
 
 		/**
@@ -68,11 +65,11 @@
 		  * @param kv key/value array
 		  * @return void
 		 */
-		public function create(array $kv)
+		public static function create(array $kv)
 		{
 			$temp_stack = [];
 
-			foreach ($this->db as $key => $val)
+			foreach (H2No::$db as $key => $val)
 			{
 				$temp_stack = array_merge($temp_stack, [ $key => $val ]);
 			}
@@ -82,9 +79,9 @@
 				$temp_stack = array_merge($temp_stack, [ $key => $val ]);
 			}
 
-			$this->db = $temp_stack;
-			$this->result = $temp_stack;
-			return $this;
+			H2No::$db = $temp_stack;
+			H2No::$result = $temp_stack;
+			return H2No::$db;
 		}
 
 		/**
@@ -94,31 +91,31 @@
 		  *
 		  * @method read
 		  * @param kv key/value array
-		  * @return void results in $this->result
+		  * @return void results in H2No::$result
 		 */
-		public function read($kv)
+		public static function find($kv)
 		{ 
 			$result = [];
 			if (is_string($kv))
 			{
-				// var_dump($this->h2no::$stack);
-				foreach ($this->db as $k => $v)
+				// var_dump(H2No::$h2no::$stack);
+				foreach (H2No::$db as $k => $v)
 				{
 					if ($kv == $k)
-						$this->result = array_merge($this->result,[$k => $v]);
+						H2No::$result = array_merge(H2No::$result,[$k => $v]);
 				}
-				return $this;
+				return H2No::$db;
 			}
 			else if (is_array($kv))
 			{	
 				foreach($kv as $value)
 				{
-					foreach ($this->db as $k => $v)
+					foreach (H2No::$db as $k => $v)
 					{
 						if (is_array($v))
-							return $this->read($v);
+							return H2No::$read($v);
 						else
-							$this->result = array_merge($this->result,[$k => $v]);
+							H2No::$result = array_merge(H2No::$result,[$k => $v]);
 					}
 				}
 			}
@@ -126,8 +123,8 @@
 			{
 				echo 'Error: Param #1 should be array or string';
 			}
-			$this->result;
-			return $this;
+			H2No::$result;
+			return H2No::$db;
 		}
 
 		/**
@@ -139,10 +136,10 @@
 		  * @param kv key/value array
 		  * @return void 
 		 */
-		public function update(array $key)
+		public static function update(array $key)
 		{
-			$this->create($key);
-			return $this;
+			H2No::create($key);
+			return H2No::$db;
 		}
 
 
@@ -155,37 +152,36 @@
 		  * @param kv key/value array
 		  * @param db H2No Database Name (default: h2no)
 		 */
-		public function delete($kv)
+		public static function delete($kv)
 		{
 			$temp_stack = [];
 
 			if (is_string($kv))
 			{
-				// var_dump($this->h2no::$stack);
-				foreach ($this->db as $k => $v)
+				
+				foreach (H2No::$db as $k => $v)
 				{
-
 					if ($kv == $k)
 						;
 					else $temp_stack = array_merge($temp_stack, [$k => $v]);
 				}
-				$this->db = $temp_stack;
-				return $this;
+				H2No::$db = $temp_stack;
+				return H2No::$db;
 			}
 			else if (is_array($kv))
 			{
 				foreach($kv as $value)
 				{
-					foreach ($this->db as $k => $v)
+					foreach (H2No::$db as $k => $v)
 					{
 						if (is_array($v))
-							return $this->delete($v);
+							return H2No::$delete($v);
 						else
 							$temp_stack = array_merge($temp_stack, [ $k => $v ]);
 					}
 				}
-				$this->db = $temp_stack;
-				return $this;
+				H2No::$db = $temp_stack;
+				return H2No::$db;
 			}
 		}
 
@@ -194,18 +190,19 @@
 		  * Save Results back to file
 		  *
 		 */
-		public function save($file)
+		public static function save($file)
 		{
-			$temp = $this->h2no::$stack = $this->db;
+			$temp = H2No::$h2no::$stack = H2No::$db;
 			file_put_contents($file, serialize($temp));
-			return $this;
+			return H2No::$db;
 		}
 
-		public function load_db($file)
+		public static function load_db($file)
 		{
-			$this->db = file_get_contents($file);
-			$this->db = unserialize($this->db);
-			return $this;
+			$temp = H2No::$h2no::restore($file);
+			H2No::$db = unserialize($temp);
+			return H2No::$db;
 		}
-	}	
+	}
+	
 ?>
