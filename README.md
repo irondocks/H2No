@@ -19,8 +19,8 @@ accomplish when I started and finished the project.
 # Usage
 --------------
 Constructor
-
 Creates database reference from parameter
+
 new H2No(string)
 --------------
 Create key/value Pair
