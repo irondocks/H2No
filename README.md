@@ -29,7 +29,7 @@ create(array)
 --------------
 Read key from H2No database
 
-read(string)
+find(string)
 -------------
 Update H2No database key
 
