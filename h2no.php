@@ -1,7 +1,7 @@
 <?php
 	namespace pasm;
 
-	require_once('pasm.php');
+	require_once 'pasm.php';
 
 
 	class H2No {
@@ -13,16 +13,12 @@
 		function __construct(string $file)
 		{
 			$sha256 = "";
-			$this->h2no = new PASM();
 			$this->result = [];
+
 			if (file_exists($file))
 			{
 				$sha256 = hash_file('sha256','pasm.php');
-			}
-			if (!is_object($this->h2no))
-			{
-				echo 'Error: First parameter needs PASM as an object';
-				exit();
+				$this->h2no = new PASM();
 			}
 			try
 			{
@@ -31,7 +27,7 @@
 			}
 			catch (e){exit(0);}
 			$this->h2no::verified();
-			if ($this->h2no::$checksum == "3e91da59a60ebbb625ba6d2a27704bccd81429b4a978b4e18815f555440117ac")
+			if ($this->h2no::$checksum == "68abaa9117c6f055987c4240f4950e41aec32efa212c3bad3c9384f834936feb")
 			{
 				echo 'PASM Verified as Version ' . $this->h2no::$version;
 			}
@@ -170,25 +166,27 @@
 				{
 
 					if ($kv == $k)
-						echo "..";
+						;
 					else $temp_stack = array_merge($temp_stack, [$k => $v]);
 				}
 				$this->db = $temp_stack;
 				return $this;
 			}
 			else if (is_array($kv))
-			foreach($kv as $value)
 			{
-				foreach ($this->db as $k => $v)
+				foreach($kv as $value)
 				{
-					if (is_array($v))
-						return $this->delete($v);
-					else
-						$temp_stack = array_merge($temp_stack, [ $k => $v ]);
+					foreach ($this->db as $k => $v)
+					{
+						if (is_array($v))
+							return $this->delete($v);
+						else
+							$temp_stack = array_merge($temp_stack, [ $k => $v ]);
+					}
 				}
+				$this->db = $temp_stack;
+				return $this;
 			}
-			$this->db = $temp_stack;
-			return $this;
 		}
 
 		/**

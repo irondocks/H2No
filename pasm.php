@@ -92,7 +92,7 @@ class PASM
     public static function verified()
     {
         PASM::$version = "v2.0";
-        PASM::$checksum = "3e91da59a60ebbb625ba6d2a27704bccd81429b4a978b4e18815f555440117ac";
+        PASM::$checksum = hash_file("sha256",'pasm.php');
         return new static;
     }
 
