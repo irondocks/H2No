@@ -1,5 +1,5 @@
 <?php declare (strict_types = 1);
-namespace pasm;  
+namespace src;  
 
 class PASM
 {
@@ -92,7 +92,7 @@ class PASM
     public static function verified()
     {
         PASM::$version = "v2.0";
-        PASM::$checksum = hash_file("sha256",'pasm.php');
+        PASM::$checksum = hash_file("sha256",__NAMESPACE__.'/pasm.php');
         return new static;
     }
 
