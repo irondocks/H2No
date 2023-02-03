@@ -171,7 +171,7 @@
 
 					if ($kv == $k)
 						echo "..";
-					else $temp_stack[] = [$k => $v];
+					else $temp_stack = array_merge($temp_stack, [$k => $v]);
 				}
 				$this->db = $temp_stack;
 				return $this;
@@ -184,7 +184,7 @@
 					if (is_array($v))
 						return $this->delete($v);
 					else
-						$temp_stack[] = [ $k => $v ];
+						$temp_stack = array_merge($temp_stack, [ $k => $v ]);
 				}
 			}
 			$this->db = $temp_stack;
@@ -217,7 +217,7 @@
 	$h2no = new H2No($pasm,"six.serialized");
 	// $h2no->set_h2no("six.serialized");
 	$h2no->load_db("six.serialized");
-	$h2no->read("ten");
+	$h2no->delete("ten");
 	$h2no->create(["eight" => ["seven" => 17]]);
 	var_dump($h2no->result);
 	$h2no->save("sixc.serialized");
