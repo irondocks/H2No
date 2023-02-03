@@ -10,10 +10,10 @@
 		public $result;
 		public $db;
 
-		function __construct(object $pasm, string $file)
+		function __construct(string $file)
 		{
 			$sha256 = "";
-			$this->h2no = $pasm;
+			$this->h2no = new PASM();
 			$this->result = [];
 			if (file_exists($file))
 			{
@@ -211,14 +211,13 @@
 		}
 	}
 
-	$pasm = new PASM();
 	$g = serialize(json_decode(file_get_contents("six.json")));
 	file_put_contents("six.serialized",$g);	
-	$h2no = new H2No($pasm,"six.serialized");
+	$h2no = new H2No("six.serialized");
 	// $h2no->set_h2no("six.serialized");
 	$h2no->load_db("six.serialized");
 	$h2no->delete("ten");
-	$h2no->create(["eight" => ["seven" => 17]]);
+	$h2no->update(["eight" => ["seven" => 17]]);
 	var_dump($h2no->result);
 	$h2no->save("sixc.serialized");
 	
