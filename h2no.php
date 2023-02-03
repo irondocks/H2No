@@ -198,7 +198,7 @@
 		 */
 		public function save($file)
 		{
-			$temp = $this->h2no::$stack;
+			$temp = $this->h2no::$stack = $this->db;
 			file_put_contents($file, serialize($temp));
 			return $this;
 		}
