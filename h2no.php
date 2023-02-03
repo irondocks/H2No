@@ -85,11 +85,11 @@
 		}
 
 		/**
-		  * Read
+		  * Find
 		  * Go through matching elements from NoSQL
 		  * query.
 		  *
-		  * @method read
+		  * @method find
 		  * @param kv key/value array
 		  * @return void results in H2No::$result
 		 */
