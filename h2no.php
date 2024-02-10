@@ -1,7 +1,7 @@
 <?php declare (strict_types = 1);
-	namespace src;
+//	namespace src;
 
-	require_once 'pasm.php';
+	require_once 'src/pasm.php';
 
 	class H2No {
 
@@ -18,11 +18,15 @@
 				if (file_exists($file))
 				{
 					H2No::$h2no = new PASM();
+					H2No::$h2no::restore($file);
+					H2No::$db = H2No::$h2no::$stack;
 				}
-				H2No::$h2no::restore($file);
-				H2No::$db = H2No::$h2no::$stack;
+				else {
+					H2No::$h2no = new PASM();
+					H2No::$db = H2No::$h2no::$stack;
+				}
 			}
-			catch (e){exit(0);}
+			catch (e){ exit(0); }
 			H2No::$h2no::verified();
 			if (H2No::$h2no::$checksum == "a2b1ddd23dcda40accd3ae4a1faa6b22d7570c299f1bb4afeeeaf8860e9a5aba")
 			{
@@ -67,12 +71,12 @@
 		 */
 		public static function create(array $kv)
 		{
-			$temp_stack = [];
-
-			foreach (H2No::$db as $key => $val)
-			{
-				$temp_stack = array_merge($temp_stack, [ $key => $val ]);
-			}
+			$temp_stack = H2No::$db;
+			
+			// foreach (H2No::$db as $key => $val)
+			// {
+			// 	$temp_stack = array_merge($temp_stack, [ $key => $val ]);
+			// }
 			
 			foreach ($kv as $key => $val)
 			{
@@ -90,33 +94,45 @@
 		  * query.
 		  *
 		  * @method find
-		  * @param kv key/value array
+		  * @param kv key/value array or key string
 		  * @return void results in H2No::$result
 		 */
-		public static function find($kv)
+		public static function find($key = null, $value = null, $count = 0)
 		{ 
 			$result = [];
-			if (is_string($kv))
+			if (is_string($key) or is_string($value))
 			{
-				// var_dump(H2No::$h2no::$stack);
+				if ($key == null)
 				foreach (H2No::$db as $k => $v)
 				{
-					if ($kv == $k)
+					if ($key != null && $key == $k)
 						H2No::$result = array_merge(H2No::$result,[$k => $v]);
+					else if ($value != null && $value == $v)
+						H2No::$result = array_merge(H2No::$result,[$k => $v]);
+					if ($count == 0)
+						continue;
+					else if ($count == count(H2No::$result))
+						break;
 				}
-				return H2No::$db;
+				return H2No::$result;
 			}
-			else if (is_array($kv))
-			{	
-				foreach($kv as $value)
+			else if (is_array($key))
+			{
+				foreach($key as $value)
 				{
 					foreach (H2No::$db as $k => $v)
 					{
 						if (is_array($v))
-							return H2No::$read($v);
+							return H2No::find($v);
 						else
 							H2No::$result = array_merge(H2No::$result,[$k => $v]);
+						if ($count == 0)
+							continue;
+						else if ($count == count(H2No::$result))
+							break;
 					}
+					if ($count == count(H2No::$result))
+						break;
 				}
 			}
 			else
