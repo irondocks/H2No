@@ -19,34 +19,35 @@ accomplish when I started and finished the project.
 # Usage
 --------------
 Constructor
-Creates database reference from parameter
-
 new H2No(string)
 --------------
-Set value of H2NoSQL file
+Creates database reference from parameter
+
 
 create(array)
 --------------
-Read key from H2No database
+Set value of H2NoSQL file
+
 
 find(string)
 -------------
-Update H2No database key
+Read key from H2No database
+
 
 update(array)
 -------------
-Delete from DB
+Update H2No database key
+
 
 delete(array)
 -------------
-Save to filename
+Delete from DB
+
 
 save(string)
 -------------
-load serialized file into H2No
+Save to filename
 
 load_db(string)
 -------------
 load serialized file into H2No
-
-(AKA set_h2no(string))
