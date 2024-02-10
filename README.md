@@ -23,7 +23,7 @@ Creates database reference from parameter
 
 new H2No(string)
 --------------
-Create key/value Pair
+Set value of H2NoSQL file
 
 create(array)
 --------------
